@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Server dependencies directories
+server/node_modules/
+server/jspm_packages/
+
+# Jest TDD
+server/coverage
+client/coverage
