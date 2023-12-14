@@ -4,10 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose --coverage --detectOpenHandles",
+    "test": "jest --verbose --coverage --detectOpenHandles --projects jest.config.js",
+    "test:db": "jest --verbose --coverage --detectOpenHandles --projects tests/jest.db.config.js",
     "dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"nodemon server.js\"",
     "start": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node server.js\""
   },
+  "jest": {
+    "projects": [
+        "<rootDir>/jest.unit.config.js",
+        "<rootDir>/tests/jest.component.config.js"
+    ]
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,6 +30,7 @@
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/globals": "^29.7.0",
+    "@shelf/jest-mongodb": "^4.2.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/mongoose": "^5.11.97",
