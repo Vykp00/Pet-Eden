@@ -78,6 +78,7 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+server/config.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -128,6 +129,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#Server dependencies
+server/node_modules/
+server/jspm_packages/
+
+# Jest
+server/coverage
+server/tests/coverage
+
 
 # Server dependencies directories
 server/node_modules/
