@@ -138,3 +138,11 @@ server/jspm_packages/
 server/coverage
 server/tests/coverage
 
+
+# Server dependencies directories
+server/node_modules/
+server/jspm_packages/
+
+# Jest TDD
+server/coverage
+client/coverage
