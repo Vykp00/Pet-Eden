@@ -40,6 +40,7 @@ const dotenv = __importStar(require("dotenv"));
 // Initialize Connection
 // load variable from dotenv
 dotenv.config({ path: './config.env' });
+// Set up reusable connection to MongoDB
 class DBManager {
     constructor() {
         this.atlasUri = process.env.ATLAS_URI || '';
@@ -53,6 +54,11 @@ class DBManager {
             if (!this._connection) {
                 this._connection = yield mongodb_1.MongoClient.connect(this.atlasUri);
             }
+        });
+    }
+    close() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield new mongodb_1.MongoClient(this.atlasUri).close();
         });
     }
 }

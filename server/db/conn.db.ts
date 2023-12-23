@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 // load variable from dotenv
 dotenv.config({ path: './config.env' });
 
+// Set up reusable connection to MongoDB
 class DBManager {
   private atlasUri : string = process.env.ATLAS_URI || '';
 
@@ -24,6 +25,9 @@ class DBManager {
     if (!this._connection) {
       this._connection = await MongoClient.connect(this.atlasUri);
     }
+  }
+  async close(){
+    await new MongoClient(this.atlasUri).close()
   }
 }
 
