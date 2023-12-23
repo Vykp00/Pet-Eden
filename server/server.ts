@@ -6,7 +6,6 @@ dotenv.config({ path: './config.env' });
 
 // Load database and collection
 import { connectToServer } from './db/services.db';
-import { error } from 'console';
 
 const port: number =  parseInt(`${process.env.PORT}`) || 5000;
 const host: string = process.env.HOST || 'localhost';

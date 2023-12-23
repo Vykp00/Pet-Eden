@@ -1,2 +1,4 @@
 # Koodit-Vine
-Koodit Vine - a social media sites where members can create, share, and react code snipets
+PetEden - a social media platforms where pet owners can register, login, and find playmates for their pets.
+NodeJS - v21.4.0
+MongoDB - 5.9.2

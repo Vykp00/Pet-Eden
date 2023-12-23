@@ -27,11 +27,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const app = (0, express_1.default)();
+// External Dependencies
 const dotenv = __importStar(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const bodyParser = require('body-parser');
-const app = (0, express_1.default)();
-// Allow CORS
+const helmet_1 = __importDefault(require("helmet"));
+const morgan = require("morgan");
+const app_api_1 = __importDefault(require("./api/app.api"));
+// Setting various HTTP headers, act as silver bullet
+app.use((0, helmet_1.default)());
+// HTTP request logger for NodeJS
+app.use(morgan('dev'));
+// Allow CORS Middleware
 app.use((0, cors_1.default)());
 //Get dotenv
 dotenv.config({ path: './config.env' });
@@ -43,4 +51,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.status(200).send('Hello World');
 });
+// Define version API route for authentication
+app.use('/api/v1', app_api_1.default);
 exports.default = app;
