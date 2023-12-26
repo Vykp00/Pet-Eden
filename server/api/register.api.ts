@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 import DBManager from '../db/conn.db';
 import * as mongoDB from 'mongodb';
 import User from '../models/user';
-import { connectToServer } from '../db/services.db';
+import { connectToServer, findObjectFromDB } from '../db/services.db';
 
 // Global Config
 const router: express.Router = express.Router();
@@ -49,45 +49,33 @@ async function checkUser () {
             .catch(err => console.error(`Failed to find document: ${err}`));
 }
 */
+// Handle POST /api/v1/register to register new user
 router.post('/register', async (req: Request, res: Response) => {
     console.log(req.body);
     // Select value from req.body. Prevent unwanted params
     const { usrEmail, usrPassword, fullName, usrAge, usrGender, usrCategory, imgUrl } = req.body;
     
     try {
-        // Get User collection
-        const usersCollection = await connectToServer('users');
-        
-        // Check if user already exist
+        // Firstly, check if user already exist with findObjectFromDB()
         // Specify type for query search
-        console.log(usrEmail)
         const query : { usrEmail: string } = { "usrEmail": usrEmail }
         // Specify what to show
         // Include only the 'usrEmail' in returned documents
-        const alreadyExistUser = await usersCollection.findOne(query)
-          .then(result => {
-            if(result) {
-                console.log(`Successfully found document: ${result.usrEmail}.`);
-            } else {
-                console.log("No document matches the provided query.");
-              }
-              return result;
-            })
+        const alreadyExistUser = await findObjectFromDB('users', query)
             .catch(err => console.error(`Failed to find document: ${err}`));
-        console.log(`Founded User: ${alreadyExistUser}`)
 
         // If User already exist return User already exist message
-        if (alreadyExistUser) {
-            return res.json({ message: 'User is already exist!'});
+        if (alreadyExistUser && alreadyExistUser.isFound == true) {
+            return res.status(409).json({ message: 'Email already exists!' });
         } else {
             // Create new User
             const newUser = { usrEmail, usrPassword, fullName, usrAge, usrGender, usrCategory, imgUrl } as User;
-            const result = await usersCollection.insertOne(newUser);
+            const result = await (await connectToServer('users')).insertOne(newUser);
 
             // "?" = (result) and ":" = (!result)
             result
-                ? res.status(201).send(`Successfully created new user with id ${result.insertedId}`)
-                : res.status(500).send('Failed to created new User');
+                ? res.status(201).json({ message: 'Successfully register new user' })
+                : res.status(500).json({ message: 'Failed to created new user' });
             }
     } catch (error: any) {
         console.error(error.message);

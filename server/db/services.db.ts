@@ -1,3 +1,4 @@
+import { WithId } from 'mongodb';
 import DBManager from './conn.db';
 
 // This connect to certain collection on Server
@@ -13,7 +14,7 @@ export async function connectToServer(coll_name: string) {
 // This find an object from selected collections in the databases. Return True if the object already exists and False if it doesn't
 export async function findObjectFromDB(coll_name: string, query: any) {
   // Check if the search document already exist
-  console.log(query)
+  console.log(`Received query: ${query}`)
   // Specify what to show
 
   // Include only the 'usrEmail' in returned documents
@@ -32,8 +33,10 @@ export async function findObjectFromDB(coll_name: string, query: any) {
       .catch(err => console.error(`Failed to find document: ${err}`));
     */
   if (searchObject) {
-    return true
+    const searchResult = { isFound: true, id: searchObject._id };
+    return searchResult
   } else {
-    return false
+    const searchResult = { isFound: false };
+    return searchResult
   }
 }

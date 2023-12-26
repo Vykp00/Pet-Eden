@@ -82,10 +82,10 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 
-    console.log(result)
+    console.log(`Result from function: ${result}`)
 
     // Expect the result from the function to return True
-    expect(result).toEqual(true);
+    expect(result.isFound).toEqual(true);
   });
 
   test( 'findObjectFromDB() should return False if existing User was NOT found', async () => {
@@ -93,9 +93,9 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 
-    console.log(result)
+    console.log(`Result from function: ${result}`);
 
     // Expect the result from the function to return True
-    expect(result).toEqual(false);
+    expect(result.isFound).toEqual(false);
   });
 });

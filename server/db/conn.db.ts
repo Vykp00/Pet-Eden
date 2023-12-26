@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 // Global Variables
 
 // Initialize Connection
+
 // load variable from dotenv
 dotenv.config({ path: './config.env' });
 

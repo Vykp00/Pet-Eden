@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest --verbose --coverage --detectOpenHandles --projects jest.config.js",
     "test:db": "jest --verbose --coverage --detectOpenHandles --projects tests/jest.db.config.js",
-    "dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"nodemon server.js\"",
-    "start": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node server.js\""
+    "dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"nodemon ./dist/server.js\"",
+    "start": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/server.js\""
   },
   "jest": {
     "projects": [
