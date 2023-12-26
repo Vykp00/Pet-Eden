@@ -56,11 +56,6 @@ class DBManager {
             }
         });
     }
-    close() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield new mongodb_1.MongoClient(this.atlasUri).close();
-        });
-    }
 }
 exports.default = new DBManager();
 /*

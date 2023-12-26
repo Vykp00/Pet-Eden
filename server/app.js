@@ -31,22 +31,22 @@ const app = (0, express_1.default)();
 // External Dependencies
 const dotenv = __importStar(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
-const bodyParser = require('body-parser');
+const body_parser_1 = __importDefault(require("body-parser"));
 const helmet_1 = __importDefault(require("helmet"));
-const morgan = require("morgan");
+const morgan_1 = __importDefault(require("morgan"));
 const app_api_1 = __importDefault(require("./api/app.api"));
 // Setting various HTTP headers, act as silver bullet
 app.use((0, helmet_1.default)());
 // HTTP request logger for NodeJS
-app.use(morgan('dev'));
+app.use((0, morgan_1.default)('dev'));
 // Allow CORS Middleware
 app.use((0, cors_1.default)());
 //Get dotenv
 dotenv.config({ path: './config.env' });
 // add express.json middleware to get req.body
 app.use(express_1.default.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
 // Define a GET route for "/"
 app.get('/', (req, res) => {
     res.status(200).send('Hello World');

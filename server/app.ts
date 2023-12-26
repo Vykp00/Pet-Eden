@@ -3,7 +3,7 @@ const app: Application = express();
 // External Dependencies
 import * as dotenv from 'dotenv';
 import cors from "cors";
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import api from './api/app.api';

@@ -1,12 +1,10 @@
 // Setting up API router for authentication
-import express from 'express';
+import express,{ Router, Request, Response }  from "express";
 
-const router = express.Router();
+import registerApi from './register.api'
 
-router.get('/', (req, res) => {
-  res.json({
-    message: 'API - 👋🌎🌍🌏',
-  });
-});
+const router: express.Router = express.Router();
+
+router.use(registerApi);
 
 export default router;

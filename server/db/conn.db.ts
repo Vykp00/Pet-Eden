@@ -26,9 +26,6 @@ class DBManager {
       this._connection = await MongoClient.connect(this.atlasUri);
     }
   }
-  async close(){
-    await new MongoClient(this.atlasUri).close()
-  }
 }
 
 export default new DBManager();

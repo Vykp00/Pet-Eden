@@ -12,7 +12,7 @@ export default class User {
         public fullName: string,
         public usrAge: number,
         public usrGender: string,
-        public usrCatogory: Animals, 
+        public usrCategory: Animals, 
         public imgUrl: string,
         public id?: ObjectId, // _id is set to be optional with '?' at code lvl
         ) {}
