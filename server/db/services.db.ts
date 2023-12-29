@@ -1,20 +1,21 @@
 import { WithId } from 'mongodb';
+import * as mongoDb from 'mongodb';
 import DBManager from './conn.db';
 
 // This connect to certain collection on Server
 export async function connectToServer(coll_name: string) {
   await DBManager.start();
-  const db = DBManager.connection!.db('app_data');
-  const coll = db.collection(coll_name);
+  const db: mongoDb.Db = DBManager.connection!.db('app_data');
+  const coll: mongoDb.Collection<mongoDb.BSON.Document> = db.collection(coll_name);
   console.log(`Successfully connect to test databases and collection ${coll_name}`)
 
   return coll
 }
 
 // This find an object from selected collections in the databases. Return True if the object already exists and False if it doesn't
-export async function findObjectFromDB(coll_name: string, query: any) {
+export async function findObjectFromDB(coll_name: string, query: any): Promise< {isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;}> {
   // Check if the search document already exist
-  console.log(`Received query: ${query}`)
+  console.log('Received query', query)
   // Specify what to show
 
   // Include only the 'usrEmail' in returned documents
@@ -33,7 +34,8 @@ export async function findObjectFromDB(coll_name: string, query: any) {
       .catch(err => console.error(`Failed to find document: ${err}`));
     */
   if (searchObject) {
-    const searchResult = { isFound: true, id: searchObject._id };
+    const searchResult = { isFound: true, outdoc: searchObject };
+    console.log('Search result from findObjectFromDB:', searchResult);
     return searchResult
   } else {
     const searchResult = { isFound: false };

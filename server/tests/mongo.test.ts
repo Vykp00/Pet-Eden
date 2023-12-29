@@ -43,9 +43,9 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     usrPassword: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
     fullName: 'Max test',
     usrAge: 3,
-    usrGender: 'male',
+    usrGender: 'Male',
     usrCategory: "Dog",
-    imgUrl: 'http://someurl.png'} as User;
+    imgUrl: 'https://someurl.png'} as User;
 
   afterAll ( async () => {
     // Restore all Mock implementation after each test
@@ -82,7 +82,7 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 
-    console.log(`Result from function: ${result}`)
+    console.log('Result from function', result)
 
     // Expect the result from the function to return True
     expect(result.isFound).toEqual(true);
@@ -93,7 +93,7 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 
-    console.log(`Result from function: ${result}`);
+    console.log('Result from function', result);
 
     // Expect the result from the function to return True
     expect(result.isFound).toEqual(false);
