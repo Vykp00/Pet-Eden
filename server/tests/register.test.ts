@@ -4,6 +4,7 @@ import DBManager from "../db/conn.db";
 import request from 'supertest';
 import app from '../app';
 import * as mongoDb from 'mongodb';
+import { redisClient } from '../app';
 /* SAMPLE TEST
 describe('Server is loaded at PORT', () => {
     test('It should get status code 200 from GET method', async () => {
@@ -20,6 +21,9 @@ describe('Testing POST api/v1/register', () => {
         
         // Close MongoDB connection
         await DBManager.connection?.close();
+
+        // Close Redis connection
+        await redisClient.disconnect();
     });
 
     test('It should register new user and return successfull message', async () => {

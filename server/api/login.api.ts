@@ -1,20 +1,21 @@
-// Setting up User registration API
+// Setting up User Login API
 // External Dependencies
 import express,{ Request, Response, NextFunction, response }  from 'express';
 import { Collection, ObjectId } from 'mongodb';
-import User from '../models/user';
+import User from '../models/user';  
 import { connectToServer, findObjectFromDB } from '../db/services.db';
 import * as dotenv from 'dotenv';
 
 // JWT Token
 import jwt from 'jsonwebtoken';
 // Express-Validator
-import requestValidator from '../middleware/validator';
+import requestValidator from '../middlewares/validator';
 import { matchedData }from 'express-validator';
 import { logInSchema } from '../models/schema/user.schema';
 
 // Bcrypt
 import * as bcrypt from 'bcrypt';
+import { USession } from '../middlewares/auth/userSession';
 
 // Global Config
 const router: express.Router = express.Router();
@@ -52,19 +53,36 @@ router.post('/login',
     
         // If User email exists in databases and return data is received. Check password
         if (checkUserEmail && checkUserEmail.outdoc && checkUserEmail.isFound == true) {
+
             // Compare passhword with hashPassword from DB
             // The Promise return boolean value
             const checkUsrPassword = await compareHashPassword(usrPassword, checkUserEmail.outdoc.usrPassword)
                 .catch(err => console.error(`Failed to verify password: ${err}`));
             
             if (checkUsrPassword == true) {
-                // If Password match, Create JWT and let User login
-                const jwttoken = jwt.sign({_id: checkUserEmail.outdoc._id?.toString(), usrEmail: checkUserEmail.outdoc.usrEmail, fullName: checkUserEmail.outdoc.fullName}, SECRET_KEY, {
+
+                // If Password match, Create Session
+                /* OLD JWT TOKEN
+                const jwtValue: {} = {
+                    _id: checkUserEmail.outdoc._id,
+                    usrEmail: checkUserEmail.outdoc.usrEmail,
+                    fullName: checkUserEmail.outdoc.fullName}
+                console.log(jwtValue);
+                const jwtToken: string = jwt.sign(jwtValue, SECRET_KEY, {
                     algorithm: 'HS256',
-                    expiresIn: '1 days'
+                    expiresIn: '1800s',
                 });
                 const userName: string = checkUserEmail.outdoc.fullName
-                return res.status(200).json({message: `Welcome back ${userName}`, token: jwttoken }, )
+
+                return res.status(200).json({message: `Welcome back ${userName}`, token: 'Bearer ' + jwtToken })
+                */
+               console.log(checkUserEmail.outdoc._id);
+               (req.session as USession).userId = checkUserEmail.outdoc._id;
+               (req.session as USession).usrEmail = checkUserEmail.outdoc.usrEmail;
+               (req.session as USession).fullName = checkUserEmail.outdoc.fullName;
+               (req.session as USession).role = checkUserEmail.outdoc.role;
+               
+               return res.status(200).json({ message: `Welcome ${checkUserEmail.outdoc.fullName}`});
             } else {
                 // If Password does not match DB, return email or password incorrect with 422 - Unprocessable Entity
                 return res.status(422).json({ message: 'Email or passsword is incorrect, please try again!' });

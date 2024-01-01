@@ -1,4 +1,5 @@
-import { WithId } from 'mongodb';
+// Here lies all starter functions with MongoDB.DB
+import { WithId, ObjectId } from 'mongodb';
 import * as mongoDb from 'mongodb';
 import DBManager from './conn.db';
 
@@ -12,33 +13,40 @@ export async function connectToServer(coll_name: string) {
   return coll
 }
 
-// This find an object from selected collections in the databases. Return True if the object already exists and False if it doesn't
+// This find an object from selected collections in the databases. 
+// THe Promise return True if the object already exists with the Object; and False if it doesn't or an Error
 export async function findObjectFromDB(coll_name: string, query: any): Promise< {isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;}> {
   // Check if the search document already exist
   console.log('Received query', query)
-  // Specify what to show
 
-  // Include only the 'usrEmail' in returned documents
+  // Specify what to show
+  //var searchResult: { isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;} = { isFound: false };
+
+  // Include only the Object in returned documents
   const searchObject = await (await connectToServer(coll_name)).findOne(query)
   /*
     .then(result => {
       if(result) {
         // If the query was found, return true with object id
           console.log(`Successfully found document: ${result._id}.`);
+          searchResult = { isFound: true, outdoc: result };
       } else {
         // If the query was not found, return false
           console.log("No document matches the provided query.");
         }
-        return result;
+        return searchResult;
       })
       .catch(err => console.error(`Failed to find document: ${err}`));
-    */
+      console.log(searchResult);
+  return searchResult;
+      */
   if (searchObject) {
-    const searchResult = { isFound: true, outdoc: searchObject };
+    const searchResult: { isFound: boolean; outdoc: WithId<mongoDb.BSON.Document>;} = { isFound: true, outdoc: searchObject };
     console.log('Search result from findObjectFromDB:', searchResult);
     return searchResult
   } else {
-    const searchResult = { isFound: false };
+    const searchResult: { isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;} = { isFound: false };
     return searchResult
   }
+  
 }

@@ -4,9 +4,9 @@ import DBManager from "../db/conn.db";
 import request from 'supertest';
 import app from '../app';
 import * as mongoDb from 'mongodb'
+import { redisClient } from '../app';
 
-
-describe('Testing POST api/v1/login and JWT', () => {
+describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
     //let connection: mongoDb.Collection<mongoDb.BSON.Document>;
     beforeAll (async () => {
         // Connect to DB
@@ -27,9 +27,12 @@ describe('Testing POST api/v1/login and JWT', () => {
         
         // Close MongoDB connection
         await DBManager.connection?.close();
+
+        // Close Redis connection
+        await redisClient.disconnect();
     });
 
-    test('It should return JWT token and return Welcomeback message with user Fullname', async () => {
+    test('It should return Session and return Welcomeback message with user Fullname', async () => {
         const res: request.Response = await request(app).post('/api/v1/login').send({
             usrEmail: 'danny.test@gmail.com',
             usrPassword: 'HelloDanny@12356',
@@ -39,9 +42,7 @@ describe('Testing POST api/v1/login and JWT', () => {
         .expect('Content-Type', 'application/json; charset=utf-8')
         console.log(`Response body from /api/v1/login/: ${res.body.message}`);
         // Expect to have sucessfull message
-        expect(res.body.message).toEqual('Welcome back Lucy test');
-        // Expect res.body to contain token from JWT
-        expect(res.body.token).toBeDefined();
+        expect(res.body.message).toEqual('Welcome Lucy test');
     });
 
     test('It should return { message: "Email or passsword is incorrect, please try again!" } if password is incorrect', async () => {
@@ -83,5 +84,9 @@ describe('Testing POST api/v1/login and JWT', () => {
         expect(res.body.errors[0].msg).toEqual('Your email must be a valid email address');
     });
 
-    
+    test('It should return status code 200 if user is loged out', async () => {
+        const res: request.Response = await request(app).delete('/api/v1/logout')
+        // Expect to get 302 since it redirect to '/' route
+        .expect(302)
+    });
 });

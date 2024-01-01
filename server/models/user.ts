@@ -3,8 +3,9 @@
 import { ObjectId } from "mongodb";
 // Class Implementation
 // Create a 
-type Animals = "Dog" | "Cat" | "Rodent" | "Bird" | "Others";
-type Genders = "Male" | "Female" | "Others";
+export type Animals = "Dog" | "Cat" | "Rodent" | "Bird" | "Others";
+export type Genders = "Male" | "Female" | "Others";
+export type Roles = "USER" | "ADMIN";
 export default class User {
     // Create User object
     constructor(
@@ -15,6 +16,7 @@ export default class User {
         public usrGender: Genders,
         public usrCategory: Animals, 
         public imgUrl: string,
+        public role: Roles,
         public id?: ObjectId, // _id is set to be optional with '?' at code lvl
         ) {}
 }
