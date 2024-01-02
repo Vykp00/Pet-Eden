@@ -11,7 +11,7 @@ dotenv.config({ path: './config.env' });
 
 // Set up reusable connection to MongoDB
 class DBManager {
-  private atlasUri : string = process.env.ATLAS_URI || '';
+  private atlasUri: string = process.env.ATLAS_URI || '';
 
   private _connection: MongoClient | null;
 

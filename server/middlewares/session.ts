@@ -39,7 +39,9 @@ let sessionRedis= session({
     cookie: {
       secure: false, // false only for dev; If true: only transmit cookie over https
       httpOnly: true, // If true: compliant clients will not allow client-side JavaScript to see the cookie in document.cookie.
-      maxAge: 1000 * 60 * 30 // Session Max Age in miliseconds. Set in 30 minutes 
+      maxAge: 1000 * 60 * 30, // Session Max Age in miliseconds. Set in 30 minutes
+      // explicitly set cookie to lax to make sure that all cookies accept it. Never use none anyway
+      sameSite: 'lax', 
     }
   })
 

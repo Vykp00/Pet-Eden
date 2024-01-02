@@ -1,4 +1,4 @@
-import { describe, expect, jest, test, afterAll, beforeAll} from '@jest/globals';
+import { describe, expect, jest, test, afterAll, beforeAll } from '@jest/globals';
 import { connectToServer } from '../db/services.db';
 import DBManager from "../db/conn.db";
 import request from 'supertest';
@@ -16,10 +16,10 @@ describe('Server is loaded at PORT', () => {
 */
 
 describe('Testing POST api/v1/register', () => {
-    afterAll ( async () => {
+    afterAll(async () => {
         // Delete all test database with matched "test"
-        await (await connectToServer('users')).deleteMany({ fullName : { $regex: "test" }});
-        
+        await (await connectToServer('users')).deleteMany({ fullName: { $regex: "test" } });
+
         // Close MongoDB connection
         await DBManager.connection?.close();
 
@@ -36,10 +36,10 @@ describe('Testing POST api/v1/register', () => {
             usrGender: 'Male',
             usrCategory: "Dog",
             imgUrl: 'https://someurl.png'
-        })
-        // Expect to get 201 status code
-        .expect(201)
-        .expect('Content-Type', 'application/json; charset=utf-8')
+        }).set('Origin', 'http://localhost:3000')
+            // Expect to get 201 status code
+            .expect(201)
+            .expect('Content-Type', 'application/json; charset=utf-8')
         console.log(`Response body from /api/v1/register/:' ${res.body.message}`)
         expect(res.body).toEqual({ message: 'Successfully register new user' })
     });
@@ -53,10 +53,10 @@ describe('Testing POST api/v1/register', () => {
             usrGender: 'Male',
             usrCategory: "Dog",
             imgUrl: 'https://someurl.png'
-        })
-        // Expect to get 409 Conflict status code
-        .expect(409)
-        .expect('Content-Type', 'application/json; charset=utf-8')
+        }).set('Origin', 'http://localhost:3000')
+            // Expect to get 409 Conflict status code
+            .expect(409)
+            .expect('Content-Type', 'application/json; charset=utf-8')
         console.log(`Response body from /api/v1/register/: ${res.body.message}`)
         expect(res.body).toEqual({ message: 'Email already exists!' })
     });
@@ -70,10 +70,10 @@ describe('Testing POST api/v1/register', () => {
             usrGender: 'Male',
             usrCategory: "Dog",
             imgUrl: ''
-        })
-        // Expect to get 422 Conflict status code
-        .expect(422)
-        .expect('Content-Type', 'application/json; charset=utf-8')
+        }).set('Origin', 'http://localhost:3000')
+            // Expect to get 422 Conflict status code
+            .expect(422)
+            .expect('Content-Type', 'application/json; charset=utf-8')
         console.log('Response body from /api/v1/register/:', res.body.errors[0])
         expect(res.body.errors[0].msg).toEqual('Your email must be a valid email address')
     });

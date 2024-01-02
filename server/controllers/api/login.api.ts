@@ -1,19 +1,19 @@
-// Setting up User Login API
+// Here lies Login Controller for API
 // External Dependencies
-import express,{ Request, Response, NextFunction, response }  from 'express';
-import User from '../../models/user';  
+import { Request, Response, NextFunction, response } from 'express';
+import User from '../../models/user';
 import { findObjectFromDB } from '../../db/services.db';
 import * as dotenv from 'dotenv';
 
 // Express-Validator
-import { matchedData }from 'express-validator';
+import { matchedData } from 'express-validator';
 
 // Bcrypt
 import * as bcrypt from 'bcrypt';
 import { USession } from '../../middlewares/auth/userSession';
 
 //Get dotenv
-dotenv.config({path: '../config.env'});
+dotenv.config({ path: '../config.env' });
 
 const SECRET_KEY: string = process.env.JWT_SECRET_KEY || 'Your-Secret-Key';
 
@@ -25,19 +25,19 @@ async function compareHashPassword(inputPassword: string | Buffer, hash: string)
     return compareResult;
 }
 
-export default async function loginApi (req: Request, res: Response, next: NextFunction) {
+export default async function loginApi(req: Request, res: Response, next: NextFunction) {
     try {
         // Select value from req from validator Schema. Prevent unwanted params
         const { usrEmail, usrPassword } = matchedData(req) as User;
-        
+
         // Specify type for query search
-        const query : { usrEmail: string } = { "usrEmail": usrEmail}
+        const query: { usrEmail: string } = { "usrEmail": usrEmail }
 
         // Check if user Email is correct. isFound will return true if email are found.
         // The Promise return the Founded object in outdoc: {}
         const checkUserEmail = await findObjectFromDB('users', query)
             .catch(err => console.error(`Failed to find user: ${err}`));
-    
+
         // If User email exists in databases and return data is received. Check password
         if (checkUserEmail && checkUserEmail.outdoc && checkUserEmail.isFound == true) {
 
@@ -45,22 +45,22 @@ export default async function loginApi (req: Request, res: Response, next: NextF
             // The Promise return boolean value
             const checkUsrPassword = await compareHashPassword(usrPassword, checkUserEmail.outdoc.usrPassword)
                 .catch(err => console.error(`Failed to verify password: ${err}`));
-            
+
             if (checkUsrPassword == true) {
-               console.log(checkUserEmail.outdoc._id);
-               (req.session as USession).userId = checkUserEmail.outdoc._id;
-               (req.session as USession).usrEmail = checkUserEmail.outdoc.usrEmail;
-               (req.session as USession).fullName = checkUserEmail.outdoc.fullName;
-               (req.session as USession).role = checkUserEmail.outdoc.role;
-               
-               return res.status(200).json({ message: `Welcome ${checkUserEmail.outdoc.fullName}`, session: req.session});
+                console.log(checkUserEmail.outdoc._id);
+                (req.session as USession).userId = checkUserEmail.outdoc._id;
+                (req.session as USession).usrEmail = checkUserEmail.outdoc.usrEmail;
+                (req.session as USession).fullName = checkUserEmail.outdoc.fullName;
+                (req.session as USession).role = checkUserEmail.outdoc.role;
+
+                return res.status(200).json({ message: `Welcome ${checkUserEmail.outdoc.fullName}`, session: req.session });
             } else {
                 // If Password does not match DB, return email or password incorrect with 422 - Unprocessable Entity
                 return res.status(422).json({ message: 'Email or passsword is incorrect, please try again!' });
             }
         } else {
             // If User is not found, return email or password incorrect with 422 - Unprocessable Entity
-            return res.status(422).json({ message: 'Email or passsword is incorrect, please try again!' }); 
+            return res.status(422).json({ message: 'Email or passsword is incorrect, please try again!' });
         }
 
     } catch (error: any) {
@@ -69,15 +69,18 @@ export default async function loginApi (req: Request, res: Response, next: NextF
     }
 };
 
-export function loginCheck (req: Request, res: Response, next: NextFunction) {
+export function loginCheck(req: Request, res: Response, next: NextFunction) {
     try {
-        if(!req.session.id || !(req.session as USession).userId) {
+        if (!req.session.id || !(req.session as USession).userId) {
             res.end()
         } else {
-             // If user is already login, redirect to /
+            // If user is already login, redirect to /
             res.status(301).redirect('/main');
         }
     } catch (error: any) {
+        // In production, replace console.error and console.log because it synchronous, blocking main thread, slowing the system
+        // Use logging library like winston    
         console.error(error.message);
         res.status(400).send(error.message)
-}}
+    }
+}

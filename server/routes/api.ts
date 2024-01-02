@@ -1,6 +1,6 @@
 // Setting up API router for authentication
 // External Dependencies
-import express,{ Router, Request, Response }  from "express";
+import express, { Router, Request, Response } from "express";
 
 import registerApi from '../controllers/api/register.api'
 import loginApi, { loginCheck } from '../controllers/api/login.api'
@@ -13,18 +13,18 @@ import { logInSchema } from '../models/schema/user.schema';
 import { newUserSchema } from '../models/schema/user.schema';
 
 // Handle Registration API. 
-apiRouter.post('/register', 
+apiRouter.post('/register',
     // Use express validator Schema to validate request data. 
-    newUserSchema, 
+    newUserSchema,
     // Request validator handle
-    requestValidator,registerApi);
+    requestValidator, registerApi);
 
 // Handle Login API
 apiRouter.post('/login',
     // Express validator Schema validate user input to login
     logInSchema,
     // Request Validator Handle
-    requestValidator,loginApi);
+    requestValidator, loginApi);
 
 apiRouter.get('/login', loginCheck)
 

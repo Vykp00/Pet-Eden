@@ -1,8 +1,8 @@
 import { Db, MongoClient } from 'mongodb';
-import {jest, describe, expect, test, afterEach, afterAll} from '@jest/globals';
+import { jest, describe, expect, test, afterEach, afterAll } from '@jest/globals';
 // Config dotenv to get variable
 import * as dotenv from 'dotenv';
-dotenv.config({path: './config.env'});
+dotenv.config({ path: './config.env' });
 // Import module database to test
 import { connectToServer, findObjectFromDB } from '../db/services.db';
 import DBManager from "../db/conn.db";
@@ -14,12 +14,12 @@ let atlasURI = process.env.ATLAS_URI || '';
 
 describe('Testing MongoDB', () => {
 
-  afterEach (() => {
+  afterEach(() => {
     // restore all Mock
     jest.restoreAllMocks();
 
   });
-  
+
   test('Should connect to MongoDB', async () => {
     const mockDbInstance = ({
       collection: jest.fn(),
@@ -31,12 +31,12 @@ describe('Testing MongoDB', () => {
     expect(DBManager.start).toBeCalledTimes(1);
     expect(DBManager.connection!.db).toBeCalledTimes(1);
     expect(mockDbInstance.collection).toBeCalledWith('users');
-  }); 
+  });
 
 });
 
 jest.mock('../db/services.db');
-describe( 'Test usage functions with Users collection on MongoDB test-users ',() => {
+describe('Test usage functions with Users collection on MongoDB test-users ', () => {
   // Define global mock users
   let mockUser = {
     usrEmail: 'john.test@gmail.com',
@@ -45,13 +45,14 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     usrAge: 3,
     usrGender: 'Male',
     usrCategory: "Dog",
-    imgUrl: 'https://someurl.png'} as User;
+    imgUrl: 'https://someurl.png'
+  } as User;
 
-  afterAll ( async () => {
+  afterAll(async () => {
     // Restore all Mock implementation after each test
     jest.restoreAllMocks();
     // Delete all test database with matched "test"
-    await (await connectToServer('test-users')).deleteMany({ fullName : { $regex: "test" }});
+    await (await connectToServer('test-users')).deleteMany({ fullName: { $regex: "test" } });
 
     // Close MongoDB connection
     await DBManager.connection?.close();
@@ -65,7 +66,7 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     // Use SpyOn to catch mockfunction implementation
     const mockConectToServer = jest.spyOn(userCollection, 'insertOne')
 
-    const result = await userCollection.insertOne(mockUser);    
+    const result = await userCollection.insertOne(mockUser);
 
     // Expect the mock function was called with the correct collection 'test-users'
     expect(mockConectToServer).toHaveBeenCalled();
@@ -77,8 +78,8 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     expect(result.acknowledged).toEqual(true);
   });
 
-  test( 'findObjectFromDB() should return True if existing User was found', async () => {
-    const searchQuery : { usrEmail: string } = { usrEmail: 'john.test@gmail.com' };
+  test('findObjectFromDB() should return True if existing User was found', async () => {
+    const searchQuery: { usrEmail: string } = { usrEmail: 'john.test@gmail.com' };
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 
@@ -88,8 +89,8 @@ describe( 'Test usage functions with Users collection on MongoDB test-users ',()
     expect(result.isFound).toEqual(true);
   });
 
-  test( 'findObjectFromDB() should return False if existing User was NOT found', async () => {
-    const searchQuery : { usrEmail: string } = { usrEmail: 'amy.test@gmail.com' };
+  test('findObjectFromDB() should return False if existing User was NOT found', async () => {
+    const searchQuery: { usrEmail: string } = { usrEmail: 'amy.test@gmail.com' };
     // Connect to 'test-users' collection and find userEmail
     const result = await findObjectFromDB('test-users', searchQuery);
 

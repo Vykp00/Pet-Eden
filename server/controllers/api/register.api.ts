@@ -1,13 +1,13 @@
 // Setting up User registration API
 // External Dependencies
-import express,{ NextFunction, Request, Response }  from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import User from '../../models/user';
 import type { Roles } from '../../models/user';
 import { connectToServer, findObjectFromDB } from '../../db/services.db';
 
 // Express-Validator
 import requestValidator from '../../middlewares/validator';
-import { matchedData }from 'express-validator';
+import { matchedData } from 'express-validator';
 import { newUserSchema } from '../../models/schema/user.schema';
 
 // Bcrypt
@@ -25,23 +25,23 @@ async function passwordHash(plainPassword: string | Buffer, saltRounds: number):
 }
 
 // Handle POST /api/v1/register to register new user
-export default async function registerApi (req: Request, res: Response) {
+export default async function registerApi(req: Request, res: Response) {
     console.log(`Request to api/v1/register: ${req.body}`);
 
     try {
         // Select value from validator Schema Prevent unwanted params. Use 'includeOptional to add optional data as undefined
-        const { usrEmail, usrPassword, fullName, usrAge, usrGender, usrCategory, imgUrl } = matchedData(req, { includeOptionals: true});
+        const { usrEmail, usrPassword, fullName, usrAge, usrGender, usrCategory, imgUrl } = matchedData(req, { includeOptionals: true });
 
         // Firstly, check if user already exist with findObjectFromDB()
         // Specify type for query search
-        const query : { usrEmail: string } = { "usrEmail": usrEmail }
+        const query: { usrEmail: string } = { "usrEmail": usrEmail }
         console.log(`Expected email: ${query}`)
 
         // Specify what to show 
         // Include only the 'usrEmail' in returned documents
         const alreadyExistUser = await findObjectFromDB('users', query)
             .catch(err => console.error(`Failed to find document: ${err}`));
-        
+
         // If User doesn't exist yet. Hash password and create new user
         if (alreadyExistUser && alreadyExistUser.isFound == false) {
             // Set role for user
@@ -58,14 +58,14 @@ export default async function registerApi (req: Request, res: Response) {
                 const result = await (await connectToServer('users')).insertOne(newUser)
                     .catch(err => console.error(`Failed to find document: ${err}`));
 
-            // "?" = (result) and ":" = (!result)
-            result
-                ? res.status(201).json({ message: 'Successfully register new user' })
-                : res.status(500).json({ message: 'Failed to created new user' });
+                // "?" = (result) and ":" = (!result)
+                result
+                    ? res.status(201).json({ message: 'Successfully register new user' })
+                    : res.status(500).json({ message: 'Failed to created new user' });
             } else {
-                res.status(500).json({ message: 'Fail to create new user. Hash is broken'})
+                res.status(500).json({ message: 'Fail to create new user. Hash is broken' })
             }
-            
+
         } else {
             // If User already exist return User already exist message
             return res.status(409).json({ message: 'Email already exists!' });

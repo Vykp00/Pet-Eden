@@ -1,4 +1,4 @@
-// Here we need to Type declaration for req.session and Partial<SessionData> to add additional params and Session authentication
+// Here lies Type declaration for req.session and Partial<SessionData> to add additional params and Session authentication
 import { Request, Response, NextFunction }  from 'express';
 import { Session } from "express-session";
 import { ObjectId } from "mongodb";

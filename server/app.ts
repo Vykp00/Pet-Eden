@@ -7,15 +7,16 @@ import cors from "cors";
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import passport from 'passport';  
-
-// Server-side Session with Redis
-import sessionRedis from './middlewares/session'
+import passport from 'passport';
 
 // Internal Dependencies
 import apiRouter from './routes/api';
 import * as middlewares from './middlewares/middlewares'
 import index from './routes/main/index.main'
+// --> Server-side Session with Redis
+import sessionRedis from './middlewares/session'
+// --> CORS Middleware
+import corsOptions from './middlewares/cors';
 
 // If Server is behind proxy (e.g. nginx) and deployed to production with secure: true
 // app.set('trust proxy', 1) // trust first proxy
@@ -26,16 +27,16 @@ app.use(helmet());
 // HTTP request logger for NodeJS
 app.use(morgan('dev'));
 
-// Allow CORS Middleware
-app.use(cors<Request>());
+// Set up CORS Middleware
+app.use('*', cors(corsOptions)); // Allow option request and headers from whitelist
+app.use(cors(corsOptions));
 
 //Get dotenv
-dotenv.config({path: './config.env'});
+dotenv.config({ path: './config.env' });
 
 // --- REDIS SESSION ---
 app.use(sessionRedis)
 
-// ----- **** -----
 
 // Apply our JWT strategy to passport
 //jwtPassportStrategy(passport);
@@ -50,14 +51,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', index);
 app.use('/main', index);
 // Define version API route for authentication
-app.use('/api/v1', apiRouter);   
+app.use('/api/v1', apiRouter);
 
 /*
 // Define a GET route for "/"
 app.get('/', (req: Request, res: Response) => {
     res.status(200).send('Hello World');
 });
-*/     
+*/
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

@@ -15,7 +15,7 @@ export async function connectToServer(coll_name: string) {
 
 // This find an object from selected collections in the databases. 
 // THe Promise return True if the object already exists with the Object; and False if it doesn't or an Error
-export async function findObjectFromDB(coll_name: string, query: any): Promise< {isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;}> {
+export async function findObjectFromDB(coll_name: string, query: any): Promise<{ isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>; }> {
   // Check if the search document already exist
   console.log('Received query', query)
 
@@ -41,12 +41,12 @@ export async function findObjectFromDB(coll_name: string, query: any): Promise< 
   return searchResult;
       */
   if (searchObject) {
-    const searchResult: { isFound: boolean; outdoc: WithId<mongoDb.BSON.Document>;} = { isFound: true, outdoc: searchObject };
+    const searchResult: { isFound: boolean; outdoc: WithId<mongoDb.BSON.Document>; } = { isFound: true, outdoc: searchObject };
     console.log('Search result from findObjectFromDB:', searchResult);
     return searchResult
   } else {
-    const searchResult: { isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;} = { isFound: false };
+    const searchResult: { isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>; } = { isFound: false };
     return searchResult
   }
-  
+
 }
