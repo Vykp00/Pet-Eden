@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "lib": [
+            "ES6",
+            "dom"
+        ],
+        "types": [
+            "cypress",
+            "node"
+        ]
+    },
+    "include": [
+        "**/*.ts",
+        "e2e/smoke.test.tsx",
+        "**/*.ts",
+        "../cypress.d.ts"
+    ]
+}
