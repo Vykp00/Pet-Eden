@@ -3,8 +3,7 @@ import { connectToServer } from '../db/services.db';
 import DBManager from "../db/conn.db";
 import request from 'supertest';
 import app from '../app';
-import * as mongoDb from 'mongodb'
-import { redisClient } from '../app';
+import redisClient from '../db/redis.db';
 
 describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
     //let connection: mongoDb.Collection<mongoDb.BSON.Document>;
@@ -40,11 +39,16 @@ describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
         // Expect to get 200 status code
         .expect(200)
         .expect('Content-Type', 'application/json; charset=utf-8')
-        console.log(`Response body from /api/v1/login/: ${res.body.message}`);
+        //console.log(`Response body from /api/v1/login/: ${res.body.message}`);
         // Expect to have sucessfull message
         expect(res.body.message).toEqual('Welcome Lucy test');
     });
 
+    /*
+    test('It should redirect if a session is found with usrEmail', async ()=>{
+
+    })
+*/
     test('It should return { message: "Email or passsword is incorrect, please try again!" } if password is incorrect', async () => {
         const res: request.Response = await request(app).post('/api/v1/login').send({
             usrEmail: 'danny.test@gmail.com',
@@ -53,7 +57,7 @@ describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
         // Expect to get 422 status code
         .expect(422)
         .expect('Content-Type', 'application/json; charset=utf-8')
-        console.log(`Response body from /api/v1/login/: ${res.body.message}`);
+        //console.log(`Response body from /api/v1/login/: ${res.body.message}`);
         // Expect to have Error message
         expect(res.body.message).toEqual('Email or passsword is incorrect, please try again!');
     });
@@ -66,7 +70,7 @@ describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
         // Expect to get 422 status code
         .expect(422)
         .expect('Content-Type', 'application/json; charset=utf-8')
-        console.log(`Response body from /api/v1/login/: ${res.body.message}`);
+        //console.log(`Response body from /api/v1/login/: ${res.body.message}`);
         // Expect to have Error message
         expect(res.body.message).toEqual('Email or passsword is incorrect, please try again!');
     });
@@ -79,7 +83,7 @@ describe('Testing POST api/v1/login and Session Logout api/v1/logout', () => {
         // Expect to get 422 status code
         .expect(422)
         .expect('Content-Type', 'application/json; charset=utf-8')
-        console.log('Response body from /api/v1/login/:', res.body.errors[0]);
+        //console.log('Response body from /api/v1/login/:', res.body.errors[0]);
         // Expect to have Error message
         expect(res.body.errors[0].msg).toEqual('Your email must be a valid email address');
     });

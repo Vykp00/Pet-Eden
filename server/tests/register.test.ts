@@ -3,8 +3,9 @@ import { connectToServer } from '../db/services.db';
 import DBManager from "../db/conn.db";
 import request from 'supertest';
 import app from '../app';
-import * as mongoDb from 'mongodb';
-import { redisClient } from '../app';
+import redisClient from '../db/redis.db';
+
+
 /* SAMPLE TEST
 describe('Server is loaded at PORT', () => {
     test('It should get status code 200 from GET method', async () => {

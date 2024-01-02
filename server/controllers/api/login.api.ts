@@ -1,24 +1,16 @@
 // Setting up User Login API
 // External Dependencies
 import express,{ Request, Response, NextFunction, response }  from 'express';
-import { Collection, ObjectId } from 'mongodb';
-import User from '../models/user';  
-import { connectToServer, findObjectFromDB } from '../db/services.db';
+import User from '../../models/user';  
+import { findObjectFromDB } from '../../db/services.db';
 import * as dotenv from 'dotenv';
 
-// JWT Token
-import jwt from 'jsonwebtoken';
 // Express-Validator
-import requestValidator from '../middlewares/validator';
 import { matchedData }from 'express-validator';
-import { logInSchema } from '../models/schema/user.schema';
 
 // Bcrypt
 import * as bcrypt from 'bcrypt';
-import { USession } from '../middlewares/auth/userSession';
-
-// Global Config
-const router: express.Router = express.Router();
+import { USession } from '../../middlewares/auth/userSession';
 
 //Get dotenv
 dotenv.config({path: '../config.env'});
@@ -33,12 +25,7 @@ async function compareHashPassword(inputPassword: string | Buffer, hash: string)
     return compareResult;
 }
 
-router.post('/login',
-    // Express validator Schema validate user input to login
-    logInSchema,
-    // Request Validator Handle
-    requestValidator,
-    async (req: Request, res: Response, next: NextFunction) => {
+export default async function loginApi (req: Request, res: Response, next: NextFunction) {
     try {
         // Select value from req from validator Schema. Prevent unwanted params
         const { usrEmail, usrPassword } = matchedData(req) as User;
@@ -60,29 +47,13 @@ router.post('/login',
                 .catch(err => console.error(`Failed to verify password: ${err}`));
             
             if (checkUsrPassword == true) {
-
-                // If Password match, Create Session
-                /* OLD JWT TOKEN
-                const jwtValue: {} = {
-                    _id: checkUserEmail.outdoc._id,
-                    usrEmail: checkUserEmail.outdoc.usrEmail,
-                    fullName: checkUserEmail.outdoc.fullName}
-                console.log(jwtValue);
-                const jwtToken: string = jwt.sign(jwtValue, SECRET_KEY, {
-                    algorithm: 'HS256',
-                    expiresIn: '1800s',
-                });
-                const userName: string = checkUserEmail.outdoc.fullName
-
-                return res.status(200).json({message: `Welcome back ${userName}`, token: 'Bearer ' + jwtToken })
-                */
                console.log(checkUserEmail.outdoc._id);
                (req.session as USession).userId = checkUserEmail.outdoc._id;
                (req.session as USession).usrEmail = checkUserEmail.outdoc.usrEmail;
                (req.session as USession).fullName = checkUserEmail.outdoc.fullName;
                (req.session as USession).role = checkUserEmail.outdoc.role;
                
-               return res.status(200).json({ message: `Welcome ${checkUserEmail.outdoc.fullName}`});
+               return res.status(200).json({ message: `Welcome ${checkUserEmail.outdoc.fullName}`, session: req.session});
             } else {
                 // If Password does not match DB, return email or password incorrect with 422 - Unprocessable Entity
                 return res.status(422).json({ message: 'Email or passsword is incorrect, please try again!' });
@@ -96,6 +67,17 @@ router.post('/login',
         console.error(error.message);
         res.status(400).send(error.message)
     }
-});
+};
 
-export default router;
+export function loginCheck (req: Request, res: Response, next: NextFunction) {
+    try {
+        if(!req.session.id || !(req.session as USession).userId) {
+            res.end()
+        } else {
+             // If user is already login, redirect to /
+            res.status(301).redirect('/main');
+        }
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(400).send(error.message)
+}}

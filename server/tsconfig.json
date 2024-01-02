@@ -108,7 +108,7 @@
   },
   "include": [
     "./*.js",
-    "api/**/*.ts",
+    "routes/**/*.ts",
     "test/**/*.ts",
     "../server/**/*.ts",
   ],

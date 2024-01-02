@@ -1,21 +1,17 @@
 // Setting up User registration API
 // External Dependencies
 import express,{ NextFunction, Request, Response }  from 'express';
-import User from '../models/user';
-import type { Roles } from '../models/user';
-import { connectToServer, findObjectFromDB } from '../db/services.db';
+import User from '../../models/user';
+import type { Roles } from '../../models/user';
+import { connectToServer, findObjectFromDB } from '../../db/services.db';
 
 // Express-Validator
-import requestValidator from '../middlewares/validator';
+import requestValidator from '../../middlewares/validator';
 import { matchedData }from 'express-validator';
-import { newUserSchema } from '../models/schema/user.schema';
+import { newUserSchema } from '../../models/schema/user.schema';
 
 // Bcrypt
 import * as bcrypt from 'bcrypt';
-
-// Global Config
-const router: express.Router = express.Router();
-
 
 // Define Salt Round for Hashing
 const saltRounds = 10;
@@ -29,12 +25,7 @@ async function passwordHash(plainPassword: string | Buffer, saltRounds: number):
 }
 
 // Handle POST /api/v1/register to register new user
-router.post('/register',
-    // Use express validator Schema to validate request data
-    newUserSchema,
-    // Request validator handle
-    requestValidator,
-    async (req: Request, res: Response, next: NextFunction) => {
+export default async function registerApi (req: Request, res: Response) {
     console.log(`Request to api/v1/register: ${req.body}`);
 
     try {
@@ -83,6 +74,4 @@ router.post('/register',
         console.error(error.message);
         res.status(400).send(error.message)
     }
-});
-
-export default router;
+}
