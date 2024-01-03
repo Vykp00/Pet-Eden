@@ -48,6 +48,8 @@ export default async function loginApi(req: Request, res: Response, next: NextFu
 
             if (checkUsrPassword == true) {
                 console.log(checkUserEmail.outdoc._id);
+
+                // If password match. Add user credentials to Redis Session
                 (req.session as USession).userId = checkUserEmail.outdoc._id;
                 (req.session as USession).usrEmail = checkUserEmail.outdoc.usrEmail;
                 (req.session as USession).fullName = checkUserEmail.outdoc.fullName;

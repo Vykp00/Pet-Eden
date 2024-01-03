@@ -1,11 +1,9 @@
-import { describe, expect, jest, test, afterAll, beforeAll } from '@jest/globals';
+import { describe, expect, test, afterAll } from '@jest/globals';
 import { connectToServer } from '../db/services.db';
 import DBManager from "../db/conn.db";
 import request from 'supertest';
 import app from '../app';
-import * as mongoDb from 'mongodb'
 import redisClient from '../db/redis.db';
-import { sessionAuthenticator } from '../middlewares/auth/userSession';
 
 describe('Testing Authenticator methods for User', () => {
     afterAll(async () => {

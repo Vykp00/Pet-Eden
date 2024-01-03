@@ -1,6 +1,6 @@
 // This is where logIN User will fisrly see other Profile cards to like and dislike the profile
 // External Dependencies
-import express,{ Request, Response, NextFunction }  from 'express';
+import express,{ Request, Response }  from 'express';
 
 // Session
 import { sessionAuthenticator } from '../../middlewares/auth/userSession';

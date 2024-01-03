@@ -29,33 +29,33 @@ export const jwtPassportStrategy = (passport: any) => {
   // opts.audience = "yoursite.net"; //  If defined, the token audience (aud) will be verified against this value.
 
   // This is a middleware to verify JWT Token from User local browser
-  passport.use( 
-      new JwtStrategy(opts, async function (jwtPayload: string, done: any) {
-        // TESTING - Decoded the jwtPayload
-        //const plainPayload = jwtPayload.split(' ')[1];
-        const decodedPayload: any = jwt.verify(jwtPayload, SECRET_KEY, {
-          // Never forget to make this explicit to prevent
-          // signature stripping attacks
-          algorithms: ['HS256'],
-          });
-        // Find user based on user ID. Create query for search
-        const query = { _id: new ObjectId(decodedPayload._id)}
-        await findObjectFromDB('users', query), function(err: unknown, searchResult: {isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>;}) {
-            if (err) {
-                // If there's an error, log error and throw false in callback
-                console.error(`Failed to find user: ${err}`)
-                return done(err, false);
-              }
-              if (searchResult.isFound == true) {
-                // If User search is found, return the search result with only user email, id, fullname 
-                console.log('Search result from JwtPayload',searchResult)
-                return done(null, searchResult);
-              } else {
-                // If User search is not found (isFound== false), return false
-                return done(null, false);
-                // or prompt to create new account
-              }
-          }
-        })
-      );
+  passport.use(
+    new JwtStrategy(opts, async function (jwtPayload: string, done: any) {
+      // TESTING - Decoded the jwtPayload
+      //const plainPayload = jwtPayload.split(' ')[1];
+      const decodedPayload: any = jwt.verify(jwtPayload, SECRET_KEY, {
+        // Never forget to make this explicit to prevent
+        // signature stripping attacks
+        algorithms: ['HS256'],
+      });
+      // Find user based on user ID. Create query for search
+      const query = { _id: new ObjectId(decodedPayload._id) }
+      await findObjectFromDB('users', query), function (err: unknown, searchResult: { isFound: boolean; outdoc?: WithId<mongoDb.BSON.Document>; }) {
+        if (err) {
+          // If there's an error, log error and throw false in callback
+          console.error(`Failed to find user: ${err}`)
+          return done(err, false);
+        }
+        if (searchResult.isFound == true) {
+          // If User search is found, return the search result with only user email, id, fullname 
+          console.log('Search result from JwtPayload', searchResult)
+          return done(null, searchResult);
+        } else {
+          // If User search is not found (isFound== false), return false
+          return done(null, false);
+          // or prompt to create new account
+        }
+      }
+    })
+  );
 };

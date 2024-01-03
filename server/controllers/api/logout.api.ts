@@ -1,9 +1,6 @@
 // Setting up User Logout API
 // External Dependencies
-import express, { Request, Response } from 'express';
-
-// Global Config
-const router: express.Router = express.Router();
+import { Request, Response } from 'express';
 
 // MOCK CODE
 // DELETE /api/v1/logout

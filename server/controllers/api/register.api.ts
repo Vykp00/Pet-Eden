@@ -1,14 +1,12 @@
 // Setting up User registration API
 // External Dependencies
-import express, { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import User from '../../models/user';
 import type { Roles } from '../../models/user';
 import { connectToServer, findObjectFromDB } from '../../db/services.db';
 
 // Express-Validator
-import requestValidator from '../../middlewares/validator';
 import { matchedData } from 'express-validator';
-import { newUserSchema } from '../../models/schema/user.schema';
 
 // Bcrypt
 import * as bcrypt from 'bcrypt';

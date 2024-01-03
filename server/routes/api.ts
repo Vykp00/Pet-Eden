@@ -1,6 +1,6 @@
 // Setting up API router for authentication
 // External Dependencies
-import express, { Router, Request, Response } from "express";
+import express from "express";
 
 import registerApi from '../controllers/api/register.api'
 import loginApi, { loginCheck } from '../controllers/api/login.api'

@@ -37,28 +37,16 @@ dotenv.config({ path: './config.env' });
 // --- REDIS SESSION ---
 app.use(sessionRedis)
 
-
-// Apply our JWT strategy to passport
-//jwtPassportStrategy(passport);
-
 // add express.json middleware to get req.body
 app.use(express.json())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(passport.initialize());
 
-
 app.use('/', index);
 app.use('/main', index);
 // Define version API route for authentication
 app.use('/api/v1', apiRouter);
-
-/*
-// Define a GET route for "/"
-app.get('/', (req: Request, res: Response) => {
-    res.status(200).send('Hello World');
-});
-*/
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

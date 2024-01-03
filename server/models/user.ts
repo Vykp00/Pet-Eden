@@ -14,9 +14,9 @@ export default class User {
         public fullName: string,
         public usrAge: number,
         public usrGender: Genders,
-        public usrCategory: Animals, 
+        public usrCategory: Animals,
         public imgUrl: string,
         public role: Roles,
         public id?: ObjectId, // _id is set to be optional with '?' at code lvl
-        ) {}
+    ) { }
 }
