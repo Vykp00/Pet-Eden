@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "es2016",
         "lib": [
-            "ES6",
+            "es2016",
             "dom"
         ],
         "types": [
